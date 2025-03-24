@@ -1,0 +1,19 @@
+{
+  "id": "community.ramaorientalfansub",
+  "version": "1.0.6",
+  "name": "Rama Oriental Fansub +",
+  "description": "Addon per visualizzare serie e film coreani dal sito Rama Oriental Fansub",
+  "catalogs": [
+    {
+      "type": "series",
+      "id": "rama_series",
+      "name": "Serie Coreane",
+      "extra": [{ "name": "skip" }]
+    }
+   
+  ],
+  "resources": ["catalog", "meta", "stream"],
+  "types": ["series"],
+  "logo": "https://imgur.com/a/490DfJR",
+  "background": "https://imgur.com/a/tw9s9Im"
+}
