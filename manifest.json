@@ -5,15 +5,18 @@
   "description": "Addon per visualizzare serie e film coreani dal sito Rama Oriental Fansub",
   "catalogs": [
     {
-      "type": "series",
+      "type": "kdrama",
       "id": "rama_series",
       "name": "Serie Coreane",
-      "extra": [{ "name": "skip" }]
+      "extra": [
+            { "name": "search", "isRequired": false },
+            { "name": "skip", "isRequired": false }
+        ]
     }
    
   ],
   "resources": ["catalog", "meta", "stream"],
   "types": ["series"],
-  "logo": "https://i.imgur.com/i7VdVv7.png",
+  "logo": "https://i.imgur.com/ng154Sj.png",
   "background": "https://i.imgur.com/mtsxMk7.jpeg"
 }

@@ -1,4 +1,3 @@
-// streams.js
 import cloudscraper from 'cloudscraper';
 import * as cheerio from 'cheerio';
 
@@ -6,18 +5,11 @@ const userAgents = [
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.6312.122 Safari/537.36',
     'Mozilla/5.0 (Windows NT 10.0; rv:125.0) Gecko/20100101 Firefox/125.0',
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Safari/605.1.15',
-    'Mozilla/5.0 (Linux; Android 14; SM-S928U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.6312.140 Mobile Safari/537.36'
+    'Mozilla/5.0 (Linux; Android 14; SM-S928U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.6312.140 Mobile Safari/537.36',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/123.0.6312.122'
 ];
 
 async function fetchWithCloudscraper(url, retries = 3) {
-    const userAgents = [
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.6312.122 Safari/537.36',
-        'Mozilla/5.0 (Windows NT 10.0; rv:125.0) Gecko/20100101 Firefox/125.0',
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Safari/605.1.15',
-        'Mozilla/5.0 (Linux; Android 14; SM-S928U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.6312.140 Mobile Safari/537.36',
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/123.0.6312.122'
-    ];
-
     function getRandomHeaders() {
         return {
             'User-Agent': userAgents[Math.floor(Math.random() * userAgents.length)],
@@ -42,12 +34,13 @@ async function fetchWithCloudscraper(url, retries = 3) {
                 timeout: 10000,
                 resolveWithFullResponse: true
             });
+
             if (response.statusCode === 404) {
                 console.warn(`[${i + 1}/${retries}] Errore 404 per ${url}. Interrompo i tentativi.`);
                 return null;
             }
 
-            if (response && response.statusCode >= 200 && response.statusCode < 300) {
+            if (response.statusCode >= 200 && response.statusCode < 300) {
                 console.log(`[${i + 1}/${retries}] Scraping riuscito: ${url}`);
                 return response.body;
             } else {
@@ -65,6 +58,7 @@ async function fetchWithCloudscraper(url, retries = 3) {
             }
         }
     }
+
     console.error(`[FETCH_FAILED] Impossibile recuperare ${url} dopo ${retries} tentativi.`);
     return null;
 }
@@ -79,6 +73,7 @@ async function getStream(episodeLink) {
         }
 
         const $ = cheerio.load(data);
+
         // 1. Cerca l'iframe all'interno del div con classe 'episode-player-box'
         const episodePlayerBox = $('div.episode-player-box');
         if (episodePlayerBox.length > 0) {
@@ -98,43 +93,46 @@ async function getStream(episodeLink) {
             }
         } else {
             console.warn(`Nessun div con classe 'episode-player-box' trovato per ${episodeLink}`);
-        }
 
-        // 2. Se non trovato, cerca il tag con i tag all'interno
-        if (!streamUrl) {
-            // Cerca il tag
-            let videoTag = $('video[name="media"]'); // Seleziona il video con name="media"
-            if (videoTag.length === 0) {
-                console.warn(`Nessun tag trovato per ${episodeLink}. Provo con $('video')`);
-                videoTag = $('video'); // Seleziona qualsiasi video
-            }
-            if (videoTag.length > 0) {
-                // Cerca i tag all'interno del tag
-                const sourceTag = videoTag.find('source'); // Seleziona il tag source
-                if (sourceTag.length > 0) {
-                    const sourceSrc = sourceTag.attr('src'); // Ottieni l'attributo src del tag source
-                    if (sourceSrc) {
-                        streamUrl = sourceSrc;
-                        console.log(`Trovato stream tramite tag : ${streamUrl}`);
+            // 2. Se non trovato, cerca il tag con i tag all'interno
+            if (!streamUrl) {
+                let videoTag = $('video[name="media"]');
+                if (videoTag.length === 0) {
+                    console.warn(`Nessun tag trovato per ${episodeLink}. Provo con $('video')`);
+                    videoTag = $('video');
+                }
+
+                if (videoTag.length > 0) {
+                    // Cerca i tag all'interno del tag
+                    const sourceTag = videoTag.find('source');
+                    if (sourceTag.length > 0) {
+                        const sourceSrc = sourceTag.attr('src');
+                        if (sourceSrc) {
+                            streamUrl = sourceSrc;
+                            console.log(`Trovato stream tramite tag : ${streamUrl}`);
+                        } else {
+                            console.warn(`Attributo src mancante nel tag per ${episodeLink}`);
+                            return null;
+                        }
                     } else {
-                        console.warn(`Attributo src mancante nel tag  per ${episodeLink}`);
+                        console.warn(`Nessun tag trovato all'interno del tag per ${episodeLink}`);
+                        return null;
                     }
                 } else {
-                    console.warn(`Nessun tag trovato all'interno del tag  per ${episodeLink}`);
+                    console.warn(`Nessun tag trovato per ${episodeLink}`);
                 }
-            } else {
-                console.warn(`Nessun tag  trovato per ${episodeLink}`);
+
+                if (!streamUrl) {
+                    $('a[href*="streamingrof.online"]').each((i, el) => {
+                        const href = $(el).attr('href');
+                        if (href && href.includes('streamingrof.online')) {
+                            streamUrl = href;
+                            console.log(`Trovato stream tramite link: ${streamUrl}`);
+                            return false;
+                        }
+                    });
+                }
             }
-        }
-        if (!streamUrl) {
-            $('a[href*="streamingrof.online"]').each((i, el) => {
-                const href = $(el).attr('href');
-                if (href && href.includes('streamingrof.online')) {
-                    streamUrl = href;
-                    console.log(`Trovato stream tramite link: ${streamUrl}`);
-                    return false; // Interrompe il ciclo .each()
-                }
-            });
         }
 
         if (streamUrl) {
