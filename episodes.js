@@ -68,7 +68,7 @@ async function fetchWithCloudscraper(url, retries = 2) {
 }
 
 async function getMeta(id) {
-    const meta = { id, type: 'series', name: '', poster: '', episodes: null };
+    const meta = { id, type: 'series', poster: '', episodes: null };
     const cleanId = id.replace(/,/g, '-').toLowerCase();
     const baseId = cleanId.replace(/-\d{4}$/, '');
     const seriesLink = `https://ramaorientalfansub.tv/drama/${baseId}/`;
@@ -89,26 +89,34 @@ async function getMeta(id) {
         // Estrai il valore di 'state' PRIMA di utilizzarlo
         let state = $('span.font-normal:nth-child(1)').text().trim();
 
-        // Modifica il titolo
+        // Estrai il nome della serie
         meta.name = $('a.text-accent').text().trim();
 
+        let show = '';
+         $('li.list-none').each(function() {
+        if ($(this).text().includes('Episodi')) { 
+        show = $(this).text().trim().replace(/\n/g, ' ').replace(/\s+/g, ' ');
+        return false; // Esci dal ciclo una volta trovato
+     }
+   });
+
         // Mantieni questo poster, è l'immagine principale della serie
-        meta.poster = $('.w-full.bg-gradient-to-t > .block.relative > img').attr('src');
+        meta.poster = $('.anime-image > img:nth-child(1)').attr('src');
 
         // Aggiungi 'state' prima della descrizione
-        let description = `${state}\n${$('div.font-light > div:nth-child(1)').text().trim()}`;
+        let description = `${state} - ${show}\n${$('div.font-light > div:nth-child(1)').text().trim()}`;
 
         const extraTextElement = $('span.font-normal.leading-6');
         const extraText = extraTextElement.text().trim();
 
         if (extraText) {
-            console.log(`Testo aggiunto alla descrizione: ${state}`);
+           console.log(`Testo aggiunto alla descrizione: ${state} - ${show}`);
         } else {
             console.log('Nessun testo trovato con il selettore specificato.');
         }
 
-        if (meta.extra && meta.extra.tag) {
-            description += ` [${meta.extra.tag.toUpperCase()}]`;
+        if (meta.extra && meta.extra.tag && meta.show) {
+            description += ` ${meta.show.toUpperCase()}]`;
         }
 
         meta.description = description;

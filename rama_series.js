@@ -97,11 +97,14 @@ async function getCatalog(skip = 0, searchQuery = '') {
         $('div.bg-gradient-to-t').each((index, element) => {
             if (catalog.length >= itemsToLoad) return false;
 
-            const posterElement = $(element).find('.w-full.bg-gradient-to-t > .block.relative > img');
+            const posterElement = $(element).find('.block.relative.w-full.group.kira-anime.add-rem.overflow-hidden > img');
             let poster = posterElement.attr('src');
-            if (!poster) {
-                console.warn(`Poster mancante per l'elemento ${index}`);
-                return true;
+            // Verifica che l'URL del poster inizi con 'https://www.themoviedb.org'
+            if (poster && (poster.startsWith('https://www.themoviedb.org') || poster.startsWith('https://ramaorientalfansub.tv/wp-content/uploads'))) {
+               // console.log(`Poster trovato: ${poster}`);
+            } else {
+               // console.warn(`Poster non valido o non inizia con 'https://www.themoviedb.org': ${poster}`);
+                poster = null; // Imposta poster a null se non valido
             }
 
             const titleElement = $(element).find('a.text-sm.line-clamp-2.font-medium.leading-snug.lg\\:leading-normal');
