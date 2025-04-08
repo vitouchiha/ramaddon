@@ -1,8 +1,0 @@
-services:
-  ramaddon:
-    build: ramaddon
-    container_name: ramarama
-    restart: unless-stopped
-    ports:
-      - "7000:7000"  # Modifica la porta se necessario
-
