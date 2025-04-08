@@ -1,6 +1,6 @@
 services:
   mammamia:
-    build: ./ramaddon:latest
+    build: ramaddon
     container_name: ramarama
     restart: unless-stopped
     ports:
