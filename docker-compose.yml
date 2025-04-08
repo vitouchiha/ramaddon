@@ -1,5 +1,5 @@
 services:
-  mammamia:
+  ramaddon:
     build: ramaddon
     container_name: ramarama
     restart: unless-stopped
