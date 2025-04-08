@@ -1,0 +1,12 @@
+services:
+# Servizio MammaMia (costruito dal repository GitHub)
+  mammamia:
+    build: ./MammaMia
+    container_name: mammamia
+    restart: unless-stopped
+    ports:
+      - "8080:8080"  # Modifica la porta se necessario
+  #  environment:
+   #   TMDB_KEY: xxx  # Puoi sostituire con un valore reale o passarlo tramite .env
+    volumes:
+      - ./mammamia/config.json:/app/config.json
