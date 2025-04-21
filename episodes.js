@@ -93,18 +93,24 @@ async function getMeta(id) {
         meta.name = $('a.text-accent').text().trim();
 
         let show = '';
-         $('li.list-none').each(function() {
-        if ($(this).text().includes('Episodi')) { 
-        show = $(this).text().trim().replace(/\n/g, ' ').replace(/\s+/g, ' ');
-        return false; // Esci dal ciclo una volta trovato
-     }
-   });
+let rating = '';
+$('li.list-none').each(function() {
+    const text = $(this).text().trim().replace(/\n/g, ' ').replace(/\s+/g, ' ');
+    if (text.includes('Episodi')) { 
+        show = text;
+    }
+    if (text.includes('Valutazione')) {
+        rating = text;
+    }
+    // Se vuoi uscire solo dopo aver trovato entrambi
+    if (show && rating) return false;
+});
 
         // Mantieni questo poster, è l'immagine principale della serie
         meta.poster = $('.anime-image > img:nth-child(1)').attr('src');
 
         // Aggiungi 'state' prima della descrizione
-        let description = `${state} - ${show}\n${$('div.font-light > div:nth-child(1)').text().trim()}`;
+        let description = `${state} - ${show} - ${rating}\n${$('div.font-light > div:nth-child(1)').text().trim()}`;
 
         const extraTextElement = $('span.font-normal.leading-6');
         const extraText = extraTextElement.text().trim();
