@@ -94,7 +94,7 @@ async function getMeta(id) {
 
         let show = '';
         let rating = '';
-        let adultContent = false; // Aggiungi una variabile per tracciare il contenuto per adulti
+        let adultContent = ''; // Aggiungi una variabile per tracciare il contenuto per adulti
         
         $('li.list-none').each(function() {
             const text = $(this).text().trim().replace(/\n/g, ' ').replace(/\s+/g, ' ');
@@ -119,7 +119,7 @@ async function getMeta(id) {
         meta.poster = $('.anime-image > img:nth-child(1)').attr('src');
         
         // Aggiungi 'state' prima della descrizione
-        let description = `${state} - ${show} - ${rating}${adultContent}\n${$('div.font-light > div:nth-child(1)').text().trim()}`;
+        let description = `${state} - ${show}\n${rating}${adultContent}\n${$('div.font-light > div:nth-child(1)').text().trim()}`;
       
         const extraTextElement = $('span.font-normal.leading-6');
         const extraText = extraTextElement.text().trim();
