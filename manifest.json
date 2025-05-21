@@ -10,7 +10,7 @@
       "name": "Serie Coreane",
       "extra": [
             { "name": "search", "isRequired": false },
-            { "name": "skip", "isRequired": false }
+            { "name": "skip", "isRequired": true }
         ]
     }
    
