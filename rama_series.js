@@ -57,7 +57,7 @@ async function fetchWithCloudscraper(url, retries = 2) {
 }
 
 const BASE_URL = 'https://ramaorientalfansub.tv/paese/corea-del-sud/';
-const ITEMS_PER_PAGE = 200;
+const ITEMS_PER_PAGE = 20;
 const MAX_PAGES = 35;
 const catalogCache = new Map();
 
