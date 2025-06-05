@@ -13,7 +13,7 @@ async function fetchWithCloudscraper(url, retries = 3) {
     function getRandomHeaders() {
         return {
             'User-Agent': userAgents[Math.floor(Math.random() * userAgents.length)],
-            'Referer': 'https://ramaorientalfansub.tv',
+            'Referer': 'https://ramaorientalfansub.live',
             'Accept-Language': 'en-US,en;q=0.9',
             'Upgrade-Insecure-Requests': '1',
             'Cache-Control': 'no-cache',
