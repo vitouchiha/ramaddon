@@ -17,7 +17,7 @@ async function fetchWithCloudscraper(url, retries = 2) {
     function getRandomHeaders() {
         return {
             'User-Agent': userAgents[Math.floor(Math.random() * userAgents.length)],
-            'Referer': 'https://ramaorientalfansub.tv',
+            'Referer': 'https://ramaorientalfansub.live',
             'Accept-Language': 'en-US,en;q=0.9',
             'Upgrade-Insecure-Requests': '1',
             'Cache-Control': 'no-cache',
@@ -71,7 +71,7 @@ async function getMeta(id) {
     const meta = { id, type: 'series', poster: '', episodes: null };
     const cleanId = id.replace(/,/g, '-').toLowerCase();
     const baseId = cleanId.replace(/-\d{4}$/, '');
-    const seriesLink = `https://ramaorientalfansub.tv/drama/${baseId}/`;
+    const seriesLink = `https://ramaorientalfansub.live/drama/${baseId}/`;
     if (metaCache.has(id)) {
         const cachedMeta = metaCache.get(id);
         return { meta: { ...cachedMeta } };
@@ -185,7 +185,7 @@ async function getEpisodes(seriesLink, $) {
             const episodeNumber = i + 1;
             const thumbnailUrl = $(element).attr('src');
             if (thumbnailUrl) {
-                const episodeLink = `https://ramaorientalfansub.tv/watch/${seriesId}-${seriesYear}-episodio-${episodeNumber}/`;
+                const episodeLink = `https://ramaorientalfansub.live/watch/${seriesId}-${seriesYear}-episodio-${episodeNumber}/`;
                 const streamUrl = await getStream(episodeLink);
                 episodes.push({
                     id: `episodio-${episodeNumber}`,
