@@ -10,7 +10,7 @@ const userAgents = [
 function getRandomHeaders() {
     return {
         'User-Agent': userAgents[Math.floor(Math.random() * userAgents.length)],
-        'Referer': 'https://ramaorientalfansub.tv/paese/corea-del-sud/',
+        'Referer': 'https://ramaorientalfansub.live/paese/corea-del-sud/',
         'Accept-Language': 'en-US,en;q=0.9'
     };
 }
@@ -56,7 +56,7 @@ async function fetchWithCloudscraper(url, retries = 2) {
     return null;
 }
 
-const BASE_URL = 'https://ramaorientalfansub.tv/paese/corea-del-sud/';
+const BASE_URL = 'https://ramaorientalfansub.live/paese/corea-del-sud/';
 const ITEMS_PER_PAGE = 20;
 const MAX_PAGES = 35;
 const catalogCache = new Map();
@@ -100,7 +100,7 @@ async function getCatalog(skip = 0, searchQuery = '') {
             const posterElement = $(element).find('.block.relative.w-full.group.kira-anime.add-rem.overflow-hidden > img');
             let poster = posterElement.attr('src');
             // Verifica che l'URL del poster inizi con 'https://www.themoviedb.org'
-            if (poster && (poster.startsWith('https://www.themoviedb.org') || poster.startsWith('https://ramaorientalfansub.tv/wp-content/uploads'))) {
+            if (poster && (poster.startsWith('https://www.themoviedb.org') || poster.startsWith('https://ramaorientalfansub.live/wp-content/uploads'))) {
                // console.log(`Poster trovato: ${poster}`);
             } else {
                // console.warn(`Poster non valido o non inizia con 'https://www.themoviedb.org': ${poster}`);
